@@ -1,0 +1,94 @@
+#Programmer: BYRON HOGAN
+#ZID: z1825194
+#Assignment: 5
+#Purpose: To maintain a small database
+
+#shebang
+#!usr/bin/bash
+
+##############################################################
+#          The show is coded below
+###############################################################
+
+if [ $2 = "show" ];then
+	if [ $3 = "all" ];then #all
+		cat $1	
+	elif [ $3 = "single" ];then #single
+		sed -n -e '1 p' $1
+		sed -n -e ''$(($4+1))' p' $1
+	else #range
+		if [[ $4 -ge $5 ]];then
+			echo "The second number must be bigger"
+			exit 1
+		fi
+		sed -n -e '1 p' $1
+		count=$(($4+1))
+		while [ $count -le $(($5+1)) ]
+		do
+			sed -n -e ''$count' p' $1
+			count=$(($count+1))
+		done		
+	fi
+fi
+
+###############################################################
+#                   The delete code follows
+###############################################################
+
+
+if [ $2 = "delete" ];then
+	if [ $3 = "all" ];then #all
+		sed -i -n -e '!1 d' $1
+	elif [ $3 = "single" ];then #single
+		sed -i -n -e ''$4' d' $1
+		echo "is it in single"
+	else #range
+		count=$4
+		while [ $count -le $5 ]
+		do
+			sed -i -n -e ''$count' d' $1
+			count=$(($count+1))
+		done
+	fi	
+fi 
+
+###############################################################
+#                    The add code follows
+###############################################################
+
+if [ $2 = "add" ];then
+	if [[ $3 = "" || $4 = "" || $5 = "" || $6 = "" ]];then
+		echo "Must have four parameters in the order (make,model,year,color)"
+		exit 1
+	fi
+	if [[ $5 -le 1869 || $5 -ge 2021 ]];then
+		echo "The year must be betweeen 1870 and 2020"
+		exit 1
+	fi
+	echo $3 $4 $5 $6 >> $1
+	echo "successfully added a record to the database"
+fi
+
+################################################################
+#                      The new code follows
+################################################################
+if [ $2 = "new" ];then
+if [ ! -f "$1" ];then
+touch "$1"
+	if [ $# -lt 3 ];then
+		echo "Automobile Database" >> "$1"
+		echo "New database created."
+	else
+		echo $3 >> "$1"
+		echo "New database created."
+	fi
+exit 1
+fi
+if [ -f "$1" ];then
+	echo "File already exists"
+	exit 1
+fi
+fi
+
+
+

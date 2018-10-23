@@ -1,0 +1,62 @@
+#include<locale>
+#include<ctype.h>
+#include<string.h>
+#include <unistd.h>
+#include"dog.h"
+#include<iostream>
+
+using namespace std;
+
+
+//this method shifts all alpha characters creating a ceaser cipher 
+void dog::cipher(char buffer[] ,int& shift,int max){
+char temp;
+int j=0;
+int i;
+for(i=0;i <shift;++i){//performs the cipher one step at a time
+	j=0;
+	while(j<max){//where the shifting actually occurs
+		temp=buffer[j];
+		if(isalpha(temp)){
+			temp= temp+1;
+			if (temp =='{'){//cylce only through the alphabet
+				temp='a';
+			}
+			if (temp=='[')//cycle only through the alphabet
+				temp='A';
+			buffer[j]=temp;
+		}
+		++j;//updates inner loop
+	}
+}
+}
+
+void dog::rotate(char buffer[],int&shift,int max){
+char temp;
+int j=0;
+int i;
+for(i=0;i <shift;++i){//performs the rotation one step at a time
+        j=0;
+        while(j<max){//where the rotating actually occurs
+                temp=buffer[j];
+                temp= temp+1;
+                buffer[j]=temp;
+                ++j;//updates inner loop
+	}
+}
+}
+
+void dog::hexa(char buffer[],int max){
+int i;
+char hexaBuffer[]
+char temp;
+int charNum;
+for (i=0;i <max;++i){
+	temp=buffer[i];
+	charNum=int(temp);
+	charNum=decimalConvert(charNum);
+	charNum=hexaConvert(charNum);
+}
+}
+
+

@@ -1,0 +1,39 @@
+#include<string.h>
+#include <unistd.h>
+#include"dog.h"
+#include<iostream>
+
+using namespace std;
+
+
+
+void dog::cipher(char buffer[] ,int& shift,int& max){
+ssize_t howMany;
+char temp;
+int j=0;
+int i;
+for(i=0;i <shift;++i){
+	while(j<max){
+		temp=buffer[j];
+		if(istemp
+		temp= temp+1;
+		if (temp =='{'){
+			temp='a';
+		}
+		if (temp=='[')
+			temp='Z';
+		buffer[j]=temp;
+		++j;
+	}
+//	howMany=write(1,buffer,strlen(buffer));
+}
+}
+
+void dog::rotate(char* buffer){
+
+}
+
+void dog::hexa(char* buffer){
+	system("hexdump");//not working
+}
+

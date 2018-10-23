@@ -1,0 +1,106 @@
+#include <sys/types.h>
+#include <sys/wait.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include <unistd.h>
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+int main(){
+string cmd="0";
+string cmd2="0";
+int count=0;
+pid_t pid;
+pid_t pid2;
+while(cmd != "quit"){
+count++;
+if (count > 100)//temporary thing to stop an infinite loop from occuring,needs wait commands to stop this from happening
+	break;
+getline(cin,cmd);
+getline(cin,cmd2);
+if (cmd2=="quit")
+	return 0;//this quits the program if quit is entered for the second command
+
+pid=fork();
+if (pid==-1){
+	perror("fork");
+	exit(1);
+}
+
+if (pid==0){//Child for original process
+	//cout<<"This is a child\n";
+	pid2=fork();
+	if (pid2==0){//this is a child of the second process,put cmd2 here
+		//cout<<"my childs child\n";
+                char *myargv[6];
+
+                char buffer[1024];
+                strncpy(buffer,cmd2.c_str(),1024);
+                myargv[0] =buffer;
+                myargv[1]= NULL;
+                int p[2];
+                if (pipe(p)<0)
+                        exit(1);
+                close (p[1]);//closes the unused write end of pipe,this uses std output
+
+		while (read(p[0], &buffer, 1) > 0)
+                   write(STDOUT_FILENO, &buffer, 1);
+		//this pipe need to be able to read from the pipe
+		//information from the other process
+		//put code to read here
+                int j= execvp(cmd2.c_str(),myargv);
+                cout<<"This is the child's child aka it didnt exec"<<endl;
+
+	//	exec2(cdm2,arg0,arg1)
+	}else{//this is the parent of the second process,put cmd1 here
+		//wait(NULL);
+		char *myargv[6];
+		char buffer[1024]={NULL};
+		strncpy(buffer,cmd.c_str(),1024);
+		myargv[0] =buffer;
+		int count =0;
+		int bufCount=0;
+		for (int i=1;i<6;++i){
+			strtok(buffer," ");
+		while(count<i){
+			while(buffer[bufCount]!= NULL){
+				myargv[bufCount]=buffer[bufCount];
+				++bufCount;
+			}
+		if(buffer[bufCount+1]==NULL)
+			break;
+		++count;
+		++bufCount;
+		}
+//			read(//read from buffer until a null is found
+				//,possibly in a while loop 
+				//while count is less than i
+				//(the amount of nulls in the string)
+				//use return code of read to see how far
+				//needed to read the next part of the buffer
+
+			//myargv[1]= NULL;
+		}
+		int p[2];
+		if (pipe(p)<0)
+			exit(1);
+		close (p[0]);//closes the standard input for the pipe
+		close(p[0]);          /* Close unused read end */
+               write(p[1], myargv[1], strlen(myargv[1]));
+               close(p[1]);          /* Reader will see EOF */
+               wait(NULL);                /* Wait for child */
+		//this pipe needs to write to the write side of the pipe 
+		//to send information to the other proccess
+		//put code to write to pipe here
+		int j= execvp(cmd.c_str(),myargv);
+		cout<<"i ma the middle aka it didnt exec\n";
+	}
+}
+else{//Parent of originla process
+	wait(NULL);//cout<<"does this end main?";
+}
+}
+//pid=wait(NULL);
+return 0;
+}
